@@ -101,3 +101,30 @@ jspm_packages/
 
 # TernJS port file
 .tern-port
+
+# Additional ignores for large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
+# Package files
+*.jar
+
+# Compiled files
+*.class
+*.py[cod]
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Maven
+target/
+dist/
+
+# Unit test reports
+TEST*.xml
