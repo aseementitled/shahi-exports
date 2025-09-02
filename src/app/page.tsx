@@ -7,48 +7,8 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if language is selected
-    const selectedLanguage = localStorage.getItem('selectedLanguage');
-    
-    if (selectedLanguage) {
-      // Language is selected, check user registration status
-      const userData = localStorage.getItem('userData');
-      
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          if (user.isRegistered) {
-            // User is registered, check KYC status
-            const kycAvailability = localStorage.getItem('kycAvailability');
-            if (kycAvailability) {
-              const kyc = JSON.parse(kycAvailability);
-              if (kyc.canProceed) {
-                // KYC can proceed, redirect to services
-                router.push('/services');
-              } else {
-                // KYC incomplete, redirect to services (with KYC nudge)
-                router.push('/services');
-              }
-            } else {
-              // No KYC data, redirect to services (with KYC nudge)
-              router.push('/services');
-            }
-          } else {
-            // User not registered, redirect to auth choice
-            router.push('/auth/choice');
-          }
-        } catch (error) {
-          // Error parsing user data, redirect to auth choice
-          router.push('/auth/choice');
-        }
-      } else {
-        // No user data, redirect to auth choice
-        router.push('/auth/choice');
-      }
-    } else {
-      // No language selected, redirect to language selection
-      router.push('/language');
-    }
+    // Always start with language selection first
+    router.push('/language');
   }, [router]);
 
   // Show loading while redirecting

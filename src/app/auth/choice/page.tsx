@@ -47,10 +47,10 @@ export default function AuthChoicePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-black mb-2">
             {isFirstTime ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-800">
             {isFirstTime 
               ? 'Choose how you want to register' 
               : 'Choose how you want to login'
@@ -71,8 +71,8 @@ export default function AuthChoicePage() {
                 </svg>
               </div>
               <div className="text-left">
-                <div className="font-semibold text-lg">Scan QR Code</div>
-                <div className="text-sm text-gray-500">
+                <div className="font-semibold text-lg text-black">Scan QR Code</div>
+                <div className="text-sm text-gray-700">
                   {isFirstTime ? 'Quick registration with QR code' : 'Quick login with QR code'}
                 </div>
               </div>
@@ -91,8 +91,8 @@ export default function AuthChoicePage() {
                 </svg>
               </div>
               <div className="text-left">
-                <div className="font-semibold text-lg">Mobile Number</div>
-                <div className="text-sm text-gray-500">
+                <div className="font-semibold text-lg text-black">Mobile Number</div>
+                <div className="text-sm text-gray-700">
                   {isFirstTime ? 'Register with mobile number' : 'Login with mobile number'}
                 </div>
               </div>

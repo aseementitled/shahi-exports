@@ -29,10 +29,10 @@ export default function LanguageSelectionPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-black mb-2">
             Choose Your Language
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-800">
             अपनी भाषा चुनें
           </p>
         </div>
@@ -49,15 +49,15 @@ export default function LanguageSelectionPage() {
               }`}
             >
               <div className="text-left">
-                <div className="font-semibold text-lg">{language.native}</div>
-                <div className="text-sm text-gray-500">{language.name}</div>
+                <div className="font-semibold text-lg text-black">{language.native}</div>
+                <div className="text-sm text-gray-700">{language.name}</div>
               </div>
             </button>
           ))}
         </div>
 
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700">
             Select your preferred language to continue
           </p>
         </div>

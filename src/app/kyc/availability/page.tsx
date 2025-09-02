@@ -51,10 +51,10 @@ export default function KYCAvailabilityPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-black mb-2">
             Document Check
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-800">
             Let's check what documents you have available
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function KYCAvailabilityPage() {
           <div className="space-y-6">
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                <h3 className="text-lg font-semibold text-black mb-3">
                   Do you have a PAN Card?
                 </h3>
                 <div className="flex space-x-4">
@@ -91,7 +91,7 @@ export default function KYCAvailabilityPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                <h3 className="text-lg font-semibold text-black mb-3">
                   Do you have an Aadhaar Card?
                 </h3>
                 <div className="flex space-x-4">
@@ -120,7 +120,7 @@ export default function KYCAvailabilityPage() {
 
               {hasPan === 'yes' && hasAadhaar === 'yes' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  <h3 className="text-lg font-semibold text-black mb-3">
                     Are both documents with you now?
                   </h3>
                   <div className="flex space-x-4">
@@ -176,13 +176,13 @@ export default function KYCAvailabilityPage() {
             </div>
             
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              <h3 className="text-xl font-semibold text-black mb-2">
                 Complete KYC Later
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-800 mb-4">
                 No problem! You can complete your KYC verification when you have your documents ready.
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-700">
                 You can still explore our services, but some features will require KYC completion.
               </p>
             </div>
