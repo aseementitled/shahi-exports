@@ -58,19 +58,19 @@ export default function QRRegistrationPage() {
     
     localStorage.setItem('userData', JSON.stringify(userData));
     
-    // Navigate to KYC flow
-    router.push('/kyc/availability');
+    // Navigate to document collection
+    router.push('/kyc/collect/pan');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Scan QR Code
+          <h1 className="text-3xl font-bold text-black mb-2">
+            {t('title', 'mobileRegistration')}
           </h1>
-          <p className="text-gray-600">
-            Scan your employee QR code to register
+          <p className="text-gray-800">
+            {t('subtitle', 'mobileRegistration')}
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function QRRegistrationPage() {
                   onClick={startScanning}
                   className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  Start Scanning
+                  {t('fetchInformation', 'mobileRegistration')}
                 </button>
               </div>
             ) : (
@@ -99,90 +99,69 @@ export default function QRRegistrationPage() {
                     </svg>
                   </div>
                 </div>
-                <p className="text-blue-600 font-medium">Scanning QR Code...</p>
-                <p className="text-sm text-gray-500 mt-2">Please wait while we scan your QR code</p>
+                <p className="text-blue-600 font-medium">{t('fetchingTitle', 'mobileRegistration')}</p>
+                <p className="text-sm text-gray-700 mt-2">{t('fetchingSubtitle', 'mobileRegistration')}</p>
               </div>
             )}
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-green-800 font-medium">QR Code Scanned Successfully!</span>
-              </div>
-              <p className="text-sm text-green-700">
-                We found your employee information. Please review and complete the details below.
-              </p>
-            </div>
-
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                <label className="block text-sm font-medium text-black mb-2">{t('nameLabel', 'mobileRegistration')}</label>
                 <input
                   type="text"
                   value={userDetails.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your full name"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black placeholder-gray-600"
+                  placeholder={t('namePlaceholder', 'mobileRegistration') as string}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+                <label className="block text-sm font-medium text-black mb-2">{t('mobileLabel', 'mobileRegistration')}</label>
                 <input
                   type="tel"
                   value={userDetails.mobile}
                   onChange={(e) => handleInputChange('mobile', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your mobile number"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black placeholder-gray-600"
+                  placeholder={t('mobilePlaceholder', 'mobileRegistration') as string}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Employee ID</label>
+                <label className="block text-sm font-medium text-black mb-2">{t('employeeIdLabel', 'mobileRegistration')}</label>
                 <input
                   type="text"
                   value={userDetails.employeeId}
                   onChange={(e) => handleInputChange('employeeId', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your employee ID"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black placeholder-gray-600"
+                  placeholder={t('employeeIdPlaceholder', 'mobileRegistration') as string}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                <label className="block text-sm font-medium text-black mb-2">{t('genderLabel', 'mobileRegistration')}</label>
                 <select
                   value={userDetails.gender}
                   onChange={(e) => handleInputChange('gender', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                 >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
+                  <option value="">{t('genderPlaceholder', 'mobileRegistration')}</option>
+                  <option value="male">{t('male', 'mobileRegistration')}</option>
+                  <option value="female">{t('female', 'mobileRegistration')}</option>
+                  <option value="other">{t('other', 'mobileRegistration')}</option>
                 </select>
               </div>
             </div>
 
-            <div className="flex space-x-4">
-              <button
-                onClick={() => {
-                  setScannedData(null);
-                  setUserDetails({ name: '', mobile: '', employeeId: '', gender: '' });
-                }}
-                className="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Scan Again
-              </button>
+            <div>
               <button
                 onClick={handleSubmit}
                 disabled={!userDetails.name || !userDetails.mobile || !userDetails.employeeId || !userDetails.gender}
-                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
-                Continue
+                {t('continue', 'common')}
               </button>
             </div>
           </div>
@@ -193,7 +172,7 @@ export default function QRRegistrationPage() {
             onClick={() => router.push('/auth/choice')}
             className="text-blue-600 hover:text-blue-800 text-sm"
           >
-            ← Back to Options
+            {t('backToOptions', 'mobileRegistration')}
           </button>
         </div>
       </div>

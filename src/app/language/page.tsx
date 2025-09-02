@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, SupportedLanguage } from '@/contexts/LanguageContext';
 
 export default function LanguageSelectionPage() {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
@@ -16,7 +16,7 @@ export default function LanguageSelectionPage() {
 
   const handleLanguageSelect = (languageCode: string) => {
     setSelectedLanguage(languageCode);
-    setLanguage(languageCode);
+    setLanguage(languageCode as SupportedLanguage);
     
     // Store language preference
     localStorage.setItem('selectedLanguage', languageCode);

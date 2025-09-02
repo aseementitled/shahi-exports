@@ -370,6 +370,9 @@ If KYC Complete:
    - ✅ Implement QR code scanning capability with hardcoded data (`/auth/register/qr`, `/auth/login/qr`)
    - ✅ Build mobile-based registration with data simulation (`/auth/register/mobile`, `/auth/login/mobile`)
    - ✅ Add loader simulation for mobile number lookup
+   - ✅ Implement proper flow detection (first-time vs returning users)
+   - ✅ Add OTP simulation for mobile registration and login
+   - ✅ Remove success messages to keep interface simple
 
 3. **KYC flow restructure** ✅
    - ✅ Create KYC availability check page (`/kyc/availability`)

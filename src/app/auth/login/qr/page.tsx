@@ -24,6 +24,11 @@ export default function QRLoginPage() {
     setTimeout(() => {
       setScannedData(hardcodedData);
       setIsScanning(false);
+      
+      // Automatically redirect after scanning
+      setTimeout(() => {
+        handleLogin();
+      }, 1000);
     }, 2000);
   };
 
@@ -42,8 +47,21 @@ export default function QRLoginPage() {
       
       localStorage.setItem('userData', JSON.stringify(updatedUserData));
       
-      // Navigate to services page
-      router.push('/services');
+      // For returning users, check KYC status and go to appropriate next step
+      const kycData = localStorage.getItem('kycData');
+      if (kycData) {
+        const parsedKycData = JSON.parse(kycData);
+        if (parsedKycData.isVerified) {
+          // KYC already complete, go to services
+          router.push('/services');
+        } else {
+          // KYC not complete, go to document collection
+          router.push('/kyc/collect/pan');
+        }
+      } else {
+        // No KYC data, go to document collection
+        router.push('/kyc/collect/pan');
+      }
     }
   };
 
@@ -51,11 +69,11 @@ export default function QRLoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Login with QR Code
+          <h1 className="text-3xl font-bold text-black mb-2">
+            {t('scanQRCode', 'login')}
           </h1>
-          <p className="text-gray-600">
-            Scan your employee QR code to login
+          <p className="text-gray-800">
+            {t('quickLoginQR', 'login')}
           </p>
         </div>
 
@@ -72,7 +90,7 @@ export default function QRLoginPage() {
                   onClick={startScanning}
                   className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  Start Scanning
+                  {t('scanQRCode', 'login')}
                 </button>
               </div>
             ) : (
@@ -84,60 +102,20 @@ export default function QRLoginPage() {
                     </svg>
                   </div>
                 </div>
-                <p className="text-blue-600 font-medium">Scanning QR Code...</p>
-                <p className="text-sm text-gray-500 mt-2">Please wait while we scan your QR code</p>
+                <p className="text-blue-600 font-medium">{t('verifyingAccount', 'login')}</p>
+                <p className="text-sm text-gray-700 mt-2">{t('verifyingSubtitle', 'login')}</p>
               </div>
             )}
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-green-800 font-medium">Login Successful!</span>
-              </div>
-              <p className="text-sm text-green-700">
-                Welcome back, {scannedData.name}!
-              </p>
+          <div className="text-center">
+            <div className="w-24 h-24 bg-green-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+              <svg className="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-
-            <div className="bg-gray-50 rounded-xl p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">Your Information</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Name:</span>
-                  <span className="font-medium">{scannedData.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Mobile:</span>
-                  <span className="font-medium">{scannedData.mobile}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Employee ID:</span>
-                  <span className="font-medium">{scannedData.employeeId}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex space-x-4">
-              <button
-                onClick={() => {
-                  setScannedData(null);
-                  setIsScanning(false);
-                }}
-                className="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Scan Again
-              </button>
-              <button
-                onClick={handleLogin}
-                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Continue to Dashboard
-              </button>
-            </div>
+            <p className="text-green-600 font-medium">Redirecting...</p>
+            <p className="text-sm text-gray-700 mt-2">Please wait while we redirect you</p>
           </div>
         )}
 
@@ -146,7 +124,7 @@ export default function QRLoginPage() {
             onClick={() => router.push('/auth/choice')}
             className="text-blue-600 hover:text-blue-800 text-sm"
           >
-            ← Back to Options
+            {t('backToOptions', 'login')}
           </button>
         </div>
       </div>

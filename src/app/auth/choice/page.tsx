@@ -10,10 +10,21 @@ export default function AuthChoicePage() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    // Check if user is already registered
+    // Check if user is already registered by looking for userData with isRegistered flag
     const userData = localStorage.getItem('userData');
-    const isRegistered = userData && JSON.parse(userData).isRegistered;
-    setIsFirstTime(!isRegistered);
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        const isRegistered = parsedData.isRegistered === true;
+        setIsFirstTime(!isRegistered);
+      } catch (error) {
+        // If parsing fails, treat as first time
+        setIsFirstTime(true);
+      }
+    } else {
+      // No userData found, treat as first time
+      setIsFirstTime(true);
+    }
   }, []);
 
   const handleRegistrationChoice = (method: 'qr' | 'mobile') => {
@@ -48,12 +59,12 @@ export default function AuthChoicePage() {
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-black mb-2">
-            {isFirstTime ? 'Create Account' : 'Welcome Back'}
+            {isFirstTime ? t('createAccount', 'authChoice') : t('welcomeBack', 'authChoice')}
           </h1>
           <p className="text-gray-800">
             {isFirstTime 
-              ? 'Choose how you want to register' 
-              : 'Choose how you want to login'
+              ? t('chooseRegistration', 'authChoice')
+              : t('chooseLogin', 'authChoice')
             }
           </p>
         </div>
@@ -71,9 +82,9 @@ export default function AuthChoicePage() {
                 </svg>
               </div>
               <div className="text-left">
-                <div className="font-semibold text-lg text-black">Scan QR Code</div>
+                <div className="font-semibold text-lg text-black">{t('scanQRCode', 'authChoice')}</div>
                 <div className="text-sm text-gray-700">
-                  {isFirstTime ? 'Quick registration with QR code' : 'Quick login with QR code'}
+                  {isFirstTime ? t('quickRegistrationQR', 'authChoice') : t('quickLoginQR', 'authChoice')}
                 </div>
               </div>
             </div>
@@ -91,9 +102,9 @@ export default function AuthChoicePage() {
                 </svg>
               </div>
               <div className="text-left">
-                <div className="font-semibold text-lg text-black">Mobile Number</div>
+                <div className="font-semibold text-lg text-black">{t('mobileNumber', 'authChoice')}</div>
                 <div className="text-sm text-gray-700">
-                  {isFirstTime ? 'Register with mobile number' : 'Login with mobile number'}
+                  {isFirstTime ? t('registerWithMobile', 'authChoice') : t('loginWithMobile', 'authChoice')}
                 </div>
               </div>
             </div>
@@ -105,7 +116,7 @@ export default function AuthChoicePage() {
             onClick={() => router.push('/language')}
             className="text-blue-600 hover:text-blue-800 text-sm"
           >
-            ← Change Language
+            {t('changeLanguage', 'authChoice')}
           </button>
         </div>
       </div>
