@@ -32,28 +32,35 @@ export default function ServicesPage() {
 
   // Load KYC data and check for existing applications
   useEffect(() => {
-    const savedKYC = localStorage.getItem('kycData');
+    const userData = localStorage.getItem('userData');
+    const kycAvailability = localStorage.getItem('kycAvailability');
     const savedLoan = localStorage.getItem('loanApplication');
     const savedEWA = localStorage.getItem('ewaApplication');
 
-    if (savedKYC) {
+    // Check if user is registered
+    if (!userData) {
+      router.push('/auth/choice');
+      return;
+    }
+
+    // Check KYC availability status
+    if (kycAvailability) {
       try {
-        const parsed = JSON.parse(savedKYC);
-        setKYCData(parsed);
-        
-        // Check if KYC is verified
-        if (!parsed.isVerified) {
-          router.push('/kyc');
-          return;
+        const kyc = JSON.parse(kycAvailability);
+        if (kyc.canProceed) {
+          // KYC can proceed, user can access services
+          setKYCData({ isVerified: true } as KYCData);
+        } else {
+          // KYC incomplete, show nudge
+          setKYCData({ isVerified: false } as KYCData);
         }
       } catch (error) {
-        console.error('Error parsing saved KYC data:', error);
-        router.push('/kyc');
-        return;
+        console.error('Error parsing KYC availability:', error);
+        setKYCData({ isVerified: false } as KYCData);
       }
     } else {
-      router.push('/kyc');
-      return;
+      // No KYC data, show nudge
+      setKYCData({ isVerified: false } as KYCData);
     }
 
     // Check for existing applications
@@ -194,7 +201,53 @@ export default function ServicesPage() {
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8 text-blue-600" />
           </div>
-          <p className="text-gray-600">{t('loading')}...</p>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show KYC completion nudge if KYC is incomplete
+  if (!kycData.isVerified) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
+          <div className="w-16 h-16 bg-yellow-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+            <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            Complete Basic KYC First
+          </h1>
+          
+          <p className="text-gray-600 mb-6">
+            To access our loan and salary advance services, you need to complete your KYC verification first.
+          </p>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+            <h3 className="font-semibold text-blue-800 mb-2">What you need:</h3>
+            <ul className="text-sm text-blue-700 text-left space-y-1">
+              <li>• PAN Card</li>
+              <li>• Aadhaar Card</li>
+              <li>• Live selfie verification</li>
+            </ul>
+          </div>
+          
+          <button
+            onClick={() => router.push('/kyc/availability')}
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-4"
+          >
+            Complete KYC Now
+          </button>
+          
+          <button
+            onClick={() => router.push('/auth/choice')}
+            className="text-blue-600 hover:text-blue-800 text-sm"
+          >
+            ← Back to Login
+          </button>
         </div>
       </div>
     );
@@ -230,9 +283,13 @@ export default function ServicesPage() {
           {/* User Info */}
           <div className="mt-4 bg-white rounded-lg shadow-sm p-4 inline-block">
             <p className="text-sm text-gray-600">
-              {t('welcomeBack')}, <span className="font-semibold text-gray-900">{kycData.name}</span>
+              Welcome back, <span className="font-semibold text-gray-900">
+                {JSON.parse(localStorage.getItem('userData') || '{}').name || 'User'}
+              </span>
             </p>
-            <p className="text-xs text-gray-500">Mobile: {kycData.mobile}</p>
+            <p className="text-xs text-gray-500">
+              Mobile: {JSON.parse(localStorage.getItem('userData') || '{}').mobile || 'N/A'}
+            </p>
           </div>
         </div>
 

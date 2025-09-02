@@ -359,22 +359,31 @@ If KYC Complete:
 
 ## 📱 IMPLEMENTATION PHASES
 
-### Phase 1: Core Structure (Week 1-2)
-1. **Language-first flow**
-   - Create dedicated language selection page
-   - Remove language selectors from other pages
-   - Apply global language persistence
+### Phase 1: Core Structure (Week 1-2) ✅ COMPLETED
+1. **Language-first flow** ✅
+   - ✅ Create dedicated language selection page (`/language`)
+   - ✅ Remove language selectors from other pages
+   - ✅ Apply global language persistence
 
-2. **Registration/login separation**
-   - Create separate registration and login flows
-   - Implement QR code scanning capability with hardcoded data
-   - Build mobile-based registration with data simulation
-   - Add loader simulation for mobile number lookup
+2. **Registration/login separation** ✅
+   - ✅ Create separate registration and login flows (`/auth/choice`)
+   - ✅ Implement QR code scanning capability with hardcoded data (`/auth/register/qr`, `/auth/login/qr`)
+   - ✅ Build mobile-based registration with data simulation (`/auth/register/mobile`, `/auth/login/mobile`)
+   - ✅ Add loader simulation for mobile number lookup
 
-3. **Basic UI simplification**
-   - Remove all tour systems
-   - Hide disabled buttons
-   - Simplify button labels
+3. **KYC flow restructure** ✅
+   - ✅ Create KYC availability check page (`/kyc/availability`)
+   - ✅ Implement document availability questions
+   - ✅ Add "complete later" option
+
+4. **KYC completion nudges** ✅
+   - ✅ Update services page to show KYC nudge when incomplete
+   - ✅ Hide service options until KYC complete
+   - ✅ Clear messaging about what's needed
+
+5. **App routing updates** ✅
+   - ✅ Update main page to start with language selection
+   - ✅ Implement proper flow: Language → Auth Choice → KYC → Services
 
 ### Phase 2: Service Flows (Week 3-4)
 1. **KYC restructure**
