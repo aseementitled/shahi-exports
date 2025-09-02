@@ -30,17 +30,27 @@ Language Selection → Login Options → Dashboard Access
 - **Pre-fill**: Available details from QR code
 - **User Input**: Missing information (gender, etc.)
 - **Benefits**: Faster, fewer errors, employer integration
+- **Hardcoded Data**: 
+  - Name: "aseem"
+  - Mobile: "8077319041" 
+  - Employee ID: "EMP123"
 
 #### Option 2: Mobile + OTP
 - **Step 1**: Enter mobile number
-- **Step 2**: Receive and verify OTP
-- **Step 3**: Fill additional details manually
+- **Step 2**: Simulate fetching user data with loader
+- **Step 3**: Show same hardcoded data (aseem, 8077319041, EMP123)
+- **Step 4**: Fill additional details manually
 - **Benefits**: No QR code dependency, universal access
 
 ### Implementation Notes
 - Store registration method for future logins
 - Maintain session persistence
 - Clear error handling for both methods
+- **User Flow Logic**:
+  - **First-time users**: Show registration options (QR scan or mobile)
+  - **Returning users**: Show login options (QR scan or mobile)
+  - **Data Simulation**: Both methods return same hardcoded user data
+  - **Loader Simulation**: Mobile option shows loading while "fetching" data
 
 ---
 
@@ -95,18 +105,20 @@ Language Selection → Login Options → Dashboard Access
    - "Are both documents with you now?" (Yes/No)
 
 3. Based on Response:
-   - If Yes → Camera-based document capture
+   - If Yes → Camera-based document capture and file upload also 
    - If No → "Please complete when you have documents ready"
 
-4. Document Capture (Camera Only):
+4. Document Capture (Camera and file upload both):
    - PAN Card capture
    - Aadhaar Card capture
+5. Document Capture (Camera upload only):
    - Live selfie verification
 ```
 
 #### Implementation Strategy
 - **Availability Check**: Clear yes/no questions
-- **Camera Only**: Remove file upload options completely
+- **Dual Options**: Both camera capture AND file upload for documents
+- **Camera Only**: Live selfie verification (camera only, no file upload)
 - **Progressive Flow**: Allow partial completion
 - **Clear Instructions**: Visual guides for document positioning
 - **Retry Mechanism**: Allow multiple attempts for unclear images
@@ -114,7 +126,8 @@ Language Selection → Login Options → Dashboard Access
 #### Benefits
 - Sets proper expectations
 - Reduces drop-offs due to missing documents
-- Eliminates file upload confusion
+- Provides flexibility (camera + file upload for documents)
+- Ensures live verification for selfies
 - Mobile-first approach
 
 ---
@@ -354,8 +367,9 @@ If KYC Complete:
 
 2. **Registration/login separation**
    - Create separate registration and login flows
-   - Implement QR code scanning capability
-   - Build OTP-based registration
+   - Implement QR code scanning capability with hardcoded data
+   - Build mobile-based registration with data simulation
+   - Add loader simulation for mobile number lookup
 
 3. **Basic UI simplification**
    - Remove all tour systems
