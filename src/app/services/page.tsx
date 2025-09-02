@@ -42,11 +42,44 @@ const getMissingDocuments = (kyc: any): string[] => {
   return missing;
 };
 
+// Helper function to check if loan is in disbursement period
+const isInDisbursementPeriod = (loanStatus: string | null, loanProgress: any): boolean => {
+  // Debug logging
+  console.log('Checking disbursement period:', {
+    loanStatus,
+    loanProgress,
+    hasProgress: !!loanProgress,
+    currentStep: loanProgress?.currentStep,
+    completedSteps: loanProgress?.completedSteps,
+    lastUpdated: loanProgress?.lastUpdated
+  });
+  
+  // Only show disbursement message if:
+  // 1. Status is 'approved' (not yet 'disbursed')
+  // 2. Agreement has been completed (currentStep is 'completed' AND agreement is in completedSteps)
+  // 3. Agreement was completed recently (within last 25 seconds to account for the 20-second disbursement delay)
+  const now = new Date().getTime();
+  const lastUpdated = loanProgress?.lastUpdated ? new Date(loanProgress.lastUpdated).getTime() : 0;
+  const timeSinceCompletion = (now - lastUpdated) / 1000; // seconds
+  
+  const result = loanStatus === 'approved' && 
+         loanProgress && 
+         loanProgress.currentStep === 'completed' && 
+         loanProgress.completedSteps && 
+         Array.isArray(loanProgress.completedSteps) &&
+         loanProgress.completedSteps.includes('agreement') &&
+         timeSinceCompletion <= 25; // Only show for 25 seconds after agreement completion
+  
+  console.log('Disbursement period result:', result, 'Time since completion:', timeSinceCompletion);
+  return result;
+};
+
 export default function ServicesPage() {
   const [kycData, setKYCData] = useState<KYCData | null>(null);
   const [hasExistingLoan, setHasExistingLoan] = useState(false);
   const [hasExistingEWA, setHasExistingEWA] = useState(false);
   const [loanStatus, setLoanStatus] = useState<string | null>(null);
+  const [loanProgress, setLoanProgress] = useState<any>(null);
   const [showCallbackModal, setShowCallbackModal] = useState(false);
   const [isCallbackLoading, setIsCallbackLoading] = useState(false);
   const router = useRouter();
@@ -58,6 +91,7 @@ export default function ServicesPage() {
     const kycData = localStorage.getItem('kycData');
     const savedLoan = localStorage.getItem('loanApplication');
     const savedEWA = localStorage.getItem('ewaApplication');
+    const loanProgressData = localStorage.getItem('loanProgress');
 
     // Check if user is registered
     if (!userData) {
@@ -113,6 +147,16 @@ export default function ServicesPage() {
       }
     }
 
+    // Check for loan progress
+    if (loanProgressData) {
+      try {
+        const progress = JSON.parse(loanProgressData);
+        setLoanProgress(progress);
+      } catch (error) {
+        console.error('Error parsing loan progress:', error);
+      }
+    }
+
     if (savedEWA) {
       try {
         const ewaData = JSON.parse(savedEWA);
@@ -124,7 +168,39 @@ export default function ServicesPage() {
     }
   }, [router]);
 
+  // Check for loan status and progress updates every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const savedLoan = localStorage.getItem('loanApplication');
+      const loanProgressData = localStorage.getItem('loanProgress');
+      
+      if (savedLoan) {
+        try {
+          const loanData = JSON.parse(savedLoan);
+          if (loanData.status !== loanStatus) {
+            setLoanStatus(loanData.status);
+            console.log('Loan status updated to:', loanData.status);
+          }
+        } catch (error) {
+          console.error('Error parsing loan data:', error);
+        }
+      }
 
+      if (loanProgressData) {
+        try {
+          const progress = JSON.parse(loanProgressData);
+          if (JSON.stringify(progress) !== JSON.stringify(loanProgress)) {
+            setLoanProgress(progress);
+            console.log('Loan progress updated:', progress);
+          }
+        } catch (error) {
+          console.error('Error parsing loan progress:', error);
+        }
+      }
+    }, 2000); // Check every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [loanStatus, loanProgress]);
 
   const handleServiceSelect = (service: 'loan' | 'ewa') => {
     if (service === 'loan') {
@@ -254,8 +330,8 @@ export default function ServicesPage() {
               
               <p className="text-gray-600 mb-6">{t('loanDescription', 'services')}</p>
               
-              {/* Show button only if not pending */}
-              {loanStatus !== 'pending' && (
+              {/* Show button only if not pending and not in disbursement period */}
+              {loanStatus !== 'pending' && !isInDisbursementPeriod(loanStatus, loanProgress) && (
                 <button
                   onClick={() => handleServiceSelect('loan')}
                   className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
@@ -278,6 +354,18 @@ export default function ServicesPage() {
                   <p className="text-sm">
                     {t('pendingStatusMessage', 'services')}
                   </p>
+                </div>
+              )}
+
+              {/* Show disbursement in progress message if in disbursement period */}
+              {isInDisbursementPeriod(loanStatus, loanProgress) && (
+                <div className="w-full bg-blue-50 border border-blue-200 text-blue-800 py-3 px-4 rounded-lg text-center">
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-sm">
+                      <strong>Disbursement in Progress:</strong> Your loan is being processed and will be disbursed shortly ..
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -312,6 +400,7 @@ export default function ServicesPage() {
             </div>
           </div>
           </div>
+
 
           {/* Callback Request Button */}
           <div className="text-center mb-4">

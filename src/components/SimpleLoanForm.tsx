@@ -71,8 +71,29 @@ export default function SimpleLoanForm() {
     
     localStorage.setItem('loanApplication', JSON.stringify(applicationData));
     
+    // Clear any old loan progress when submitting new application
+    localStorage.removeItem('loanProgress');
+    
     setIsSubmitting(false);
     setIsSubmitted(true);
+    
+    // Automatically change status to approved after 20 seconds
+    setTimeout(() => {
+      // Get the current loan data from localStorage
+      const savedLoan = localStorage.getItem('loanApplication');
+      if (savedLoan) {
+        try {
+          const loanData = JSON.parse(savedLoan);
+          loanData.status = 'approved';
+          loanData.approvedDate = new Date().toISOString();
+          loanData.updatedAt = new Date().toISOString();
+          localStorage.setItem('loanApplication', JSON.stringify(loanData));
+          console.log('Loan status automatically changed to approved after 20 seconds:', loanData);
+        } catch (error) {
+          console.error('Error updating loan status:', error);
+        }
+      }
+    }, 20000);
   };
 
   const handleGoToServices = () => {
@@ -94,6 +115,17 @@ export default function SimpleLoanForm() {
           <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
             {t('applicationSubmittedMessage', 'services')}
           </p>
+          
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse"></div>
+                </div>
+                <p className="text-sm text-yellow-800">
+                  Our team will get back to you with approval or rejection within 24 hrs
+                </p>
+              </div>
+            </div>
           
           <div className="bg-blue-50 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
             <h3 className="font-semibold text-blue-900 mb-2 sm:mb-3 text-sm sm:text-base">

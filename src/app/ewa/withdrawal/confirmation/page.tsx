@@ -111,9 +111,19 @@ function WithdrawalConfirmationContent() {
           <p className="text-sm text-blue-800 mb-2">
             <strong>{t('estimatedProcessing', 'services')}:</strong> 2-4 hours
           </p>
-          <p className="text-sm text-blue-800">
+          <p className="text-sm text-blue-800 mb-3">
             {t('processingTime', 'services')}
           </p>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-green-100 rounded-full flex items-center justify-center">
+                <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+              </div>
+              {/* <p className="text-sm text-green-800">
+                <strong>Auto-Disbursement:</strong> Your withdrawal will be automatically disbursed in a few moments...
+              </p> */}
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

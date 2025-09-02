@@ -34,6 +34,24 @@ function WithdrawalStatusContent() {
     setIsLoading(false);
   }, [searchParams, router]);
 
+  // Check for withdrawal status updates every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const id = searchParams.get('id');
+      if (id) {
+        const existingWithdrawals = JSON.parse(localStorage.getItem('ewaWithdrawals') || '[]');
+        const withdrawal = existingWithdrawals.find((w: any) => w.id === id);
+        
+        if (withdrawal && withdrawal.status !== withdrawalData?.status) {
+          setWithdrawalData(withdrawal);
+          console.log('Withdrawal status updated to:', withdrawal.status);
+        }
+      }
+    }, 2000); // Check every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [searchParams, withdrawalData?.status]);
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'processing':
@@ -206,6 +224,18 @@ function WithdrawalStatusContent() {
                   <div className="flex items-center space-x-3">
                     <Clock className="w-4 h-4 text-gray-400" />
                     <span className="text-sm text-gray-500">Disbursement</span>
+                  </div>
+                </div>
+                
+                {/* Auto-Disbursement Message */}
+                <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-green-100 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                    </div>
+                    {/* <p className="text-sm text-green-800">
+                      <strong>Auto-Disbursement:</strong> Your withdrawal will be automatically disbursed in a few moments...
+                    </p> */}
                   </div>
                 </div>
               </div>

@@ -62,6 +62,32 @@ export default function EWADashboardPage() {
     setIsLoading(false);
   }, [router]);
 
+  // Check for withdrawal status updates every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const savedWithdrawals = localStorage.getItem('ewaWithdrawals');
+      if (savedWithdrawals) {
+        try {
+          const withdrawals = JSON.parse(savedWithdrawals);
+          // Check if any withdrawal status has changed
+          const hasChanges = withdrawals.some((w: any, index: number) => {
+            const currentWithdrawal = withdrawals.find((cw: any) => cw.id === w.id);
+            return currentWithdrawal && currentWithdrawal.status !== w.status;
+          });
+          
+          if (hasChanges) {
+            setWithdrawals(withdrawals);
+            console.log('Withdrawal status updated:', withdrawals);
+          }
+        } catch (error) {
+          console.error('Error parsing withdrawals:', error);
+        }
+      }
+    }, 2000); // Check every 2 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleWithdrawal = async () => {
     const amount = parseFloat(withdrawalAmount);
     if (!amount || amount <= 0 || amount > availableAmount) return;
@@ -87,6 +113,18 @@ export default function EWADashboardPage() {
     
     setIsSubmitting(false);
     setWithdrawalAmount('');
+    
+    // Automatically change status to disbursed after 20 seconds
+    setTimeout(() => {
+      const updatedWithdrawals = JSON.parse(localStorage.getItem('ewaWithdrawals') || '[]');
+      const withdrawalIndex = updatedWithdrawals.findIndex((w: any) => w.id === withdrawalRequest.id);
+      if (withdrawalIndex !== -1) {
+        updatedWithdrawals[withdrawalIndex].status = 'disbursed';
+        updatedWithdrawals[withdrawalIndex].processedAt = new Date().toISOString();
+        localStorage.setItem('ewaWithdrawals', JSON.stringify(updatedWithdrawals));
+        console.log('Withdrawal status automatically changed to disbursed after 20 seconds:', withdrawalRequest.id);
+      }
+    }, 20000); // 20 seconds delay
     
     // Redirect to withdrawal confirmation page
     router.push(`/ewa/withdrawal/confirmation?amount=${amount}&id=${withdrawalRequest.id}`);
@@ -219,6 +257,16 @@ export default function EWADashboardPage() {
                     <p className="text-sm text-yellow-800">
                       {t('withdrawalInProgressMessage', 'services')}
                     </p>
+                    <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                        </div>
+                        {/* <p className="text-sm text-blue-800">
+                          <strong>Auto-Disbursement:</strong> Your withdrawal will be automatically disbursed in a few moments...
+                        </p> */}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

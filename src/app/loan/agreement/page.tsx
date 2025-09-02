@@ -29,23 +29,26 @@ export default function AgreementPage() {
       };
       localStorage.setItem('loanProgress', JSON.stringify(loanProgress));
       
-      // Update loan application status to disbursed
-      const savedLoan = localStorage.getItem('loanApplication');
-      if (savedLoan) {
-        try {
-          const loanData = JSON.parse(savedLoan);
-          loanData.status = 'disbursed';
-          loanData.disbursedDate = new Date().toISOString();
-          localStorage.setItem('loanApplication', JSON.stringify(loanData));
-        } catch (error) {
-          console.error('Error updating loan status:', error);
-        }
-      }
-      
       // Show success message briefly then redirect
       setTimeout(() => {
         router.push('/services');
       }, 3000);
+      
+      // Automatically change status to disbursed after 20 seconds
+      setTimeout(() => {
+        const savedLoan = localStorage.getItem('loanApplication');
+        if (savedLoan) {
+          try {
+            const loanData = JSON.parse(savedLoan);
+            loanData.status = 'disbursed';
+            loanData.disbursedDate = new Date().toISOString();
+            localStorage.setItem('loanApplication', JSON.stringify(loanData));
+            console.log('Loan status automatically changed to disbursed after 20 seconds');
+          } catch (error) {
+            console.error('Error updating loan status:', error);
+          }
+        }
+      }, 20000); // 20 seconds delay
     }, 2000);
   };
 
@@ -85,10 +88,21 @@ export default function AgreementPage() {
           <p className="text-black mb-6">
             Your loan agreement has been successfully signed and processed.
           </p>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
             <p className="text-sm text-green-800">
               <strong>Success:</strong> Redirecting you back to services...
             </p>
+          </div>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+              </div>
+              <p className="text-sm text-blue-800">
+                <strong>Auto-Disbursement:</strong> Your loan will be automatically disbursed in 20 seconds!
+              </p>
+            </div>
           </div>
         </div>
       </div>
