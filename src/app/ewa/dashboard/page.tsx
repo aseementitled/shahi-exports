@@ -179,7 +179,7 @@ export default function EWADashboardPage() {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-green-600 font-semibold text-lg">Kosh</div>
+              <div className="text-green-600 font-semibold text-lg"></div>
             </div>
           </div>
 
@@ -193,9 +193,9 @@ export default function EWADashboardPage() {
                 </div>
                 <h2 className="text-2xl font-bold text-green-900 mb-2">Available Amount</h2>
                 <div className="text-4xl font-bold text-green-600 mb-2">₹{availableAmount.toLocaleString()}</div>
-                <p className="text-sm text-green-700">
+                {/* <p className="text-sm text-green-700">
                   Maximum: ₹{maxDrawdown.toLocaleString()}
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -216,9 +216,9 @@ export default function EWADashboardPage() {
                     max={availableAmount}
                     className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                   />
-                  <p className="text-xs text-blue-600 mt-1">
+                  {/* <p className="text-xs text-blue-600 mt-1">
                     Maximum: ₹{availableAmount.toLocaleString()}
-                  </p>
+                  </p> */}
                 </div>
                 <button
                   onClick={handleWithdrawal}

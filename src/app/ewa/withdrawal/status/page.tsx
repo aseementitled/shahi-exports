@@ -145,7 +145,7 @@ function WithdrawalStatusContent() {
               </p>
             </div>
             <div className="text-right">
-              <div className="text-green-600 font-semibold text-lg">Kosh</div>
+              <div className="text-green-600 font-semibold text-lg"></div>
             </div>
           </div>
 

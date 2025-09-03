@@ -21,22 +21,22 @@ interface KYCData {
 
 
 // Helper function to determine missing documents
-const getMissingDocuments = (kyc: any): string[] => {
+const getMissingDocuments = (kyc: any, language: string = 'en'): string[] => {
   const missing: string[] = [];
   
   // Check if PAN document exists and is uploaded (and not skipped)
   if ((!kyc.panDocument || kyc.panDocument === null || kyc.panDocument === '') && !kyc.panSkipped) {
-    missing.push('PAN Card');
+    missing.push(language === 'hi' ? 'पैन कार्ड' : 'PAN Card');
   }
   
   // Check if Aadhaar document exists and is uploaded (and not skipped)
   if ((!kyc.aadhaarDocument || kyc.aadhaarDocument === null || kyc.aadhaarDocument === '') && !kyc.aadhaarSkipped) {
-    missing.push('Aadhaar Card');
+    missing.push(language === 'hi' ? 'आधार कार्ड' : 'Aadhaar Card');
   }
   
   // Check if selfie document exists and is uploaded (selfie cannot be skipped)
   if (!kyc.selfieDocument || kyc.selfieDocument === null || kyc.selfieDocument === '') {
-    missing.push('Live selfie verification');
+    missing.push(language === 'hi' ? 'लाइव सेल्फी सत्यापन' : 'Live selfie verification');
   }
   
   return missing;
@@ -107,7 +107,7 @@ export default function ServicesPage() {
         console.log('isVerified:', kyc.isVerified); // Debug log
         
         // Check if all required documents are present (ignore isVerified flag)
-        const missingDocs = getMissingDocuments(kyc);
+        const missingDocs = getMissingDocuments(kyc, currentLanguage);
         console.log('Missing documents:', missingDocs); // Debug log
         
         if (missingDocs.length === 0) {
@@ -124,7 +124,9 @@ export default function ServicesPage() {
         console.error('Error parsing KYC data:', error);
         setKYCData({ 
           isVerified: false,
-          missingDocuments: ['PAN Card', 'Aadhaar Card', 'Live selfie verification']
+          missingDocuments: currentLanguage === 'hi' 
+            ? ['पैन कार्ड', 'आधार कार्ड', 'लाइव सेल्फी सत्यापन']
+            : ['PAN Card', 'Aadhaar Card', 'Live selfie verification']
         } as KYCData);
       }
     } else {
@@ -132,7 +134,9 @@ export default function ServicesPage() {
       console.log('No KYC data found'); // Debug log
       setKYCData({ 
         isVerified: false,
-        missingDocuments: ['PAN Card', 'Aadhaar Card', 'Live selfie verification']
+        missingDocuments: currentLanguage === 'hi' 
+          ? ['पैन कार्ड', 'आधार कार्ड', 'लाइव सेल्फी सत्यापन']
+          : ['PAN Card', 'Aadhaar Card', 'Live selfie verification']
       } as KYCData);
     }
 
@@ -258,31 +262,45 @@ export default function ServicesPage() {
           </div>
           
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Complete Basic KYC First
+            {t('kycRequiredTitle', 'kyc')}
           </h1>
           
           <p className="text-gray-600 mb-6">
-            To access our loan and salary advance services, you need to complete your KYC verification first.
+            {(() => {
+              const missingDocs = kycData.missingDocuments || [];
+              if (currentLanguage === 'hi') {
+                // Convert English document names to Hindi for display
+                const hindiDocs = missingDocs.map(doc => {
+                  if (doc === 'PAN Card') return 'पैन कार्ड';
+                  if (doc === 'Aadhaar Card') return 'आधार कार्ड';
+                  if (doc === 'Live selfie verification') return 'लाइव सेल्फी सत्यापन';
+                  return doc; // Return as-is if already in Hindi
+                });
+                
+                if (hindiDocs.length === 1) {
+                  return `हमारे साथ ऋण का उपयोग करने के लिए आपको ${hindiDocs[0]} की आवश्यकता होगी। हमारी टीम 24 घंटे के भीतर आपसे संपर्क करेगी और केवाईसी प्रक्रिया पूरी करने में आपकी मदद करेगी।`;
+                } else {
+                  return `हमारे साथ ऋण का उपयोग करने के लिए आपको ${hindiDocs.join(', ')} की आवश्यकता होगी। हमारी टीम 24 घंटे के भीतर आपसे संपर्क करेगी और केवाईसी प्रक्रिया पूरी करने में आपकी मदद करेगी।`;
+                }
+              } else {
+                if (missingDocs.length === 1) {
+                  return `You will need a ${missingDocs[0]} to access loans with us. Our team will reach out to you within 24 hours to help you with it and complete the KYC process.`;
+                } else {
+                  return `You will need ${missingDocs.join(', ')} to access loans with us. Our team will reach out to you within 24 hours to help you with it and complete the KYC process.`;
+                }
+              }
+            })()}
           </p>
-          
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-            <h3 className="font-semibold text-blue-800 mb-2">{t('whatYouStillNeed', 'kyc')}</h3>
-            <ul className="text-sm text-blue-700 text-left space-y-1">
-              {kycData.missingDocuments?.map((doc, index) => (
-                <li key={index}>• {doc}</li>
-              ))}
-            </ul>
-          </div>
           
           <button
             onClick={() => {
               // Determine which document to start with based on what's missing
               const missingDocs = kycData.missingDocuments || [];
-              if (missingDocs.includes('PAN Card')) {
+              if (missingDocs.includes('PAN Card') || missingDocs.includes('पैन कार्ड')) {
                 router.push('/kyc/collect/pan');
-              } else if (missingDocs.includes('Aadhaar Card')) {
+              } else if (missingDocs.includes('Aadhaar Card') || missingDocs.includes('आधार कार्ड')) {
                 router.push('/kyc/collect/aadhaar');
-              } else if (missingDocs.includes('Live selfie verification')) {
+              } else if (missingDocs.includes('Live selfie verification') || missingDocs.includes('लाइव सेल्फी सत्यापन')) {
                 router.push('/kyc/collect/selfie');
               } else {
                 router.push('/kyc/collect/pan');
@@ -290,14 +308,14 @@ export default function ServicesPage() {
             }}
             className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-4"
           >
-            Complete KYC Now
+            {t('completeKycNow', 'kyc')}
           </button>
           
           <button
             onClick={() => router.push('/auth/choice')}
             className="text-blue-600 hover:text-blue-800 text-sm"
           >
-            ← Back to Login
+            {t('backToLogin', 'kyc')}
           </button>
         </div>
       </div>

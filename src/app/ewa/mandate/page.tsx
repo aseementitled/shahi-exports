@@ -62,7 +62,7 @@ export default function EWAMandatePage() {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-green-600 font-semibold text-lg">Kosh</div>
+              <div className="text-green-600 font-semibold text-lg"></div>
             </div>
           </div>
           
@@ -86,7 +86,7 @@ export default function EWAMandatePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Service Provider</label>
-                <p className="text-sm text-black">ADHIKOSH FINANCIAL AD...</p>
+                <p className="text-sm text-black">ADHI FINANCIAL AD...</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Maximum Amount</label>
@@ -176,7 +176,7 @@ export default function EWAMandatePage() {
                 className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <label htmlFor="authorization" className="text-sm text-black leading-relaxed">
-                I am authorising Kosh AFA, to debit my account based on the instructions herein. I understand that the bank where I have authorised the debit may levy one time mandate processing charges as mentioned in the bank&apos;s latest schedule of charges. I understand that I am authorised to cancel / amend this mandate by appropriately communicating the cancellation/amendment request to the creditor or to the bank where I have authorised the mandate.
+                I am authorising  AFA, to debit my account based on the instructions herein. I understand that the bank where I have authorised the debit may levy one time mandate processing charges as mentioned in the bank&apos;s latest schedule of charges. I understand that I am authorised to cancel / amend this mandate by appropriately communicating the cancellation/amendment request to the creditor or to the bank where I have authorised the mandate.
               </label>
             </div>
           </div>
